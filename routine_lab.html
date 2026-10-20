@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Routine Lab | Dynamic Weekly Planner</title>
+<style>
+:root{--bg:#f4f6f9;--panel:#fff;--ink:#202535;--muted:#71788a;--line:#e5e8ef;--accent:#4e6ee8;--accent2:#18a7a1;--gate:#dce9ff;--exam:#ffebce;--build:#e8e0ff;--life:#dff3e8;--college:#e8edf4;--danger:#d95c61;--shadow:0 10px 30px rgba(33,45,80,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:650}.app{max-width:1600px;margin:auto;padding:24px}.top{display:flex;gap:20px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--accent)}h1{font-size:clamp(27px,3vw,42px);letter-spacing:-.04em;margin:5px 0 8px}.sub{color:var(--muted);max-width:720px;line-height:1.5}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.primary{background:var(--accent);color:#fff}.secondary{background:#fff;border:1px solid var(--line);color:var(--ink)}.danger-btn{background:#fff0f0;color:#a63d43}.metrics{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:18px}.metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.metric{padding:16px 18px}.metric .label{font-size:12px;color:var(--muted);font-weight:650}.metric strong{display:block;font-size:26px;letter-spacing:-.04em;margin:7px 0 3px}.metric small{color:var(--muted)}.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}.panel{padding:17px;min-width:0}.section-head{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px}.section-head h2{font-size:16px;margin:0;letter-spacing:-.02em}.hint{font-size:12px;color:var(--muted)}.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin:12px 0}.legend span{display:flex;align-items:center;gap:5px}.dot{height:9px;width:9px;border-radius:3px;display:inline-block}.calendar-scroll{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}.calendar{min-width:1000px;display:grid;grid-template-columns:52px repeat(7,minmax(125px,1fr));position:relative}.day-head{height:46px;background:#fafbfe;border-bottom:1px solid var(--line);border-left:1px solid var(--line);padding:8px 6px;text-align:center;font-weight:750;font-size:12px;position:sticky;top:0;z-index:4}.day-head small{display:block;color:var(--muted);font-size:10px;font-weight:550;margin-top:3px}.time-head{background:#fafbfe;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}.time-labels{position:relative;height:720px;background:#fafbfe}.time-label{height:40px;padding:3px 5px;text-align:right;font-size:10px;color:var(--muted);border-bottom:1px solid var(--line)}.day-col{height:720px;position:relative;border-left:1px solid var(--line);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 39px,#e9ecf2 39px,#e9ecf2 40px),repeating-linear-gradient(to bottom,transparent 0,transparent 19px,#f5f6fa 19px,#f5f6fa 20px)}.day-col.dragover{background-color:#f0f4ff;outline:2px dashed var(--accent);outline-offset:-3px}.event{position:absolute;left:3px;right:3px;border-radius:8px;padding:6px 7px;overflow:hidden;font-size:10.5px;line-height:1.25;border:1px solid rgba(52,65,98,.09);z-index:2;user-select:none}.event strong{display:block;font-size:10.5px;margin-bottom:3px}.event small{font-size:9.5px;opacity:.78}.event.fixed{background:var(--college);border-left:3px solid #8998ae}.event.gate{background:var(--gate);border-left:3px solid #4779d7}.event.exam{background:var(--exam);border-left:3px solid #d69a37}.event.build{background:var(--build);border-left:3px solid #8a68db}.event.life{background:var(--life);border-left:3px solid #37a575}.event.meal{background:#fce5ed;border-left:3px solid #d5779a}.event.routine{background:#dcf4f2;border-left:3px solid #229d98}.event.draggable{cursor:grab}.event.draggable:active{cursor:grabbing}.lock{float:right;font-size:10px;opacity:.6}.side{display:flex;flex-direction:column;gap:14px}.side .panel{padding:16px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:12px;font-weight:700;color:#50596a}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 11px;background:#fff;color:var(--ink)}.field textarea{resize:vertical;min-height:64px}.row-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.small-btn{padding:8px 10px;font-size:12px}.full{width:100%}.pill{border-radius:999px;padding:4px 8px;background:#eef1f9;color:#636c80;font-size:10px;font-weight:750;display:inline-block}.notice{background:#fff8e8;border:1px solid #f2e0b5;border-radius:10px;padding:11px;font-size:12px;line-height:1.45;color:#735a23}.notice.blue{background:#eef4ff;border-color:#d5e1ff;color:#435a8c}.notice.red{background:#fff0f0;border-color:#ffd4d4;color:#9b4040}.tasks{display:flex;flex-direction:column;gap:8px}.task-row{display:flex;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:10px;font-size:12px}.task-row .swatch{width:9px;height:24px;border-radius:4px;flex-shrink:0}.task-row b{display:block}.task-row small{display:block;color:var(--muted);margin-top:2px}.task-row button{margin-left:auto;padding:6px 7px;background:#f3f5fa;color:#555f72;font-size:11px}.question-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:0 14px}.question-grid .field{margin:8px 0}.questions-panel{margin-top:16px}.questions-intro{color:var(--muted);font-size:13px;line-height:1.5;margin:7px 0 13px}.bottom-bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:12px}.status{font-size:12px;color:var(--muted)}.empty{padding:16px;text-align:center;color:var(--muted);font-size:12px}.tag{font-size:10px;letter-spacing:.04em;text-transform:uppercase;font-weight:800}.workload{height:8px;background:#edf0f6;border-radius:99px;overflow:hidden;margin:10px 0 7px}.workload div{height:100%;background:linear-gradient(90deg,#4e6ee8,#19a8a1);width:62%}.footer{padding:20px 4px;color:var(--muted);font-size:11px;line-height:1.5}@media(max-width:1100px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.app{padding:12px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:12px}.metric strong{font-size:22px}.side{display:flex}.question-grid{grid-template-columns:1fr}.panel{padding:12px}.top-actions button{padding:9px 10px}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="top">
+  <div><div class="eyebrow">Routine Lab · Demo 01</div><h1>Build a week you can actually live with.</h1><div class="sub">A flexible planner for GATE, college exams, engineering skills, projects, running and actual free time. Drag a movable block to another day or time. Locked classes and travel stay put until you change the setup.</div></div>
+  <div class="top-actions"><button class="secondary" id="resetBtn">Reset demo</button><button class="secondary" id="exportBtn">Export week (.json)</button><button class="primary" id="saveBtn">Save changes</button></div>
+ </header>
+ <section class="metrics">
+  <div class="metric"><div class="label">GATE countdown</div><strong id="gateMetric">109 days</strong><small>Primary long-game goal</small></div>
+  <div class="metric"><div class="label">College exams</div><strong id="examMetric">30 days</strong><small>Near-term priority</small></div>
+  <div class="metric"><div class="label">Planned focus time</div><strong id="focusMetric">—</strong><small>GATE + exam + tech skills</small></div>
+  <div class="metric"><div class="label">Protected life time</div><strong id="lifeMetric">—</strong><small>Enjoyment, meals and recovery</small></div>
+ </section>
+ <div class="layout">
+  <main class="panel">
+   <div class="section-head"><div><h2>Weekly canvas</h2><div class="hint">06:00–24:00 · 30-minute drop increments · scroll sideways on smaller screens</div></div><span class="pill" id="eventCount">0 blocks</span></div>
+   <div class="legend">
+    <span><i class="dot" style="background:#c9d8f8"></i>GATE</span><span><i class="dot" style="background:#ffdfaa"></i>College exam</span><span><i class="dot" style="background:#d8cdf8"></i>Build / skills</span><span><i class="dot" style="background:#cbeedb"></i>Life / run</span><span><i class="dot" style="background:#dbe2ec"></i>College / commute</span><span>🔒 Fixed commitment</span></div>
+   <div class="calendar-scroll"><div class="calendar" id="calendar"></div></div>
+   <div id="collisionBox" class="notice blue" style="margin-top:12px">Overlap checker: no block conflicts detected yet.</div>
+   <div class="bottom-bar"><span class="status" id="statusText">Demo data is editable. Drag a colored block to reschedule.</span><button class="primary small-btn" id="suggestBtn">Suggest a lighter week</button></div>
+  </main>
+  <aside class="side">
+   <section class="panel">
+    <div class="section-head"><h2>Block editor</h2><span class="pill">Add / edit</span></div>
+    <div class="field"><label for="taskTitle">What are you doing?</label><input id="taskTitle" placeholder="e.g. GATE: Operating Systems" /></div>
+    <div class="row-fields"><div class="field"><label for="taskDay">Day</label><select id="taskDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div><div class="field"><label for="taskType">Type</label><select id="taskType"><option value="gate">GATE study</option><option value="exam">College exam</option><option value="build">Tech skills</option><option value="routine">Running / health</option><option value="life">Enjoyment / rest</option><option value="meal">Meal / personal</option></select></div></div>
+    <div class="row-fields"><div class="field"><label for="taskStart">Start</label><input id="taskStart" type="time" value="19:00" step="1800" /></div><div class="field"><label for="taskDuration">Duration</label><select id="taskDuration"><option value="0.5">30 min</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option><option value="3">3 hours</option></select></div></div>
+    <div class="field"><label for="taskNote">Optional note</label><input id="taskNote" placeholder="e.g. one topic + 15 PYQs" /></div>
+    <input type="hidden" id="editingId" />
+    <div class="row-fields"><button class="primary" id="addBtn">Add block</button><button class="secondary" id="cancelEditBtn">Cancel edit</button></div><button class="danger-btn small-btn full" id="deleteBtn" style="margin-top:8px;display:none">Delete selected block</button>
+    <p class="hint">Tip: click any movable block to edit it. Fixed college, prep, travel and meal-window blocks are protected in this demo.</p>
+   </section>
+   <section class="panel">
+    <div class="section-head"><h2>Suggested workload split</h2></div>
+    <div class="tasks" id="workloadList"></div><div class="workload"><div id="workloadBar"></div></div><div class="hint" id="workloadCaption">The plan should stay adjustable, not packed to 100%.</div>
+   </section>
+   <section class="panel">
+    <div class="section-head"><h2>Class drop shortlist</h2></div>
+    <div class="notice blue">Conservative suggestion only: attend all ML classes and every lab. The timetable image appears to show the classes below, but confirm institute attendance rules before skipping anything.</div>
+    <div class="tasks" style="margin-top:10px">
+     <div class="task-row"><span class="swatch" style="background:#dbe2ec"></span><div><b>Potentially skippable theory</b><small>Cloud Computing theory, DAA theory, MLOps theory, and CC tutorial only if attendance buffer allows and the material is genuinely covered faster independently.</small></div></div>
+     <div class="task-row"><span class="swatch" style="background:#dbe2ec"></span><div><b>Never auto-drop</b><small>Machine Learning theory, ML lab, DAA lab, MLOps lab. You explicitly said ML and labs are non-negotiable.</small></div></div>
+    </div>
+   </section>
+  </aside>
+ </div>
+ <section class="panel questions-panel">
+  <div class="section-head"><h2>Personalize the routine</h2><span class="pill">Answer these next</span></div>
+  <p class="questions-intro">I used your commute and meal notes as provisional constraints. The 4–6 PM item is now a one-hour cooldown + food block, not a two-hour blackout. A few answers determine whether the routine is sustainable. Edit these in the app, then use “Copy answers” to send them back in chat.</p>
+  <div class="question-grid">
+   <div class="field"><label for="wake">Usual wake-up time on a normal day</label><input id="wake" type="time" value="07:00" /></div>
+   <div class="field"><label for="sleep">Target bedtime</label><input id="sleep" type="time" value="23:00" /></div>
+   <div class="field"><label for="weekend">Weekend availability</label><select id="weekend"><option value="both">Saturday and Sunday mostly free</option><option value="sat">Saturday free, Sunday partly busy</option><option value="sun">Sunday free, Saturday partly busy</option><option value="busy">Both days have commitments</option></select></div>
+   <div class="field"><label for="eatwindow">How should the 4–6 PM cooldown + food hour work?</label><select id="eatwindow"><option value="window" selected>One hour to cool down and eat sometime between 4–6 PM</option><option value="fixed">I am unavailable for the full 4–6 PM window</option><option value="travel">This is mainly a travel / family routine window</option><option value="other">Something else</option></select></div>
+   <div class="field"><label for="gateLevel">GATE prep status</label><select id="gateLevel"><option value="start">Starting / inconsistent</option><option value="some">Some subjects completed</option><option value="revision">Mostly revision + PYQs</option></select></div>
+   <div class="field"><label for="examLoad">College exam prep status (in ~30 days)</label><select id="examLoad"><option value="low">Need to start most subjects</option><option value="medium">About half the syllabus is done</option><option value="high">Mostly revision and practice</option></select></div>
+   <div class="field"><label for="gateSubjects">GATE subjects to prioritize</label><input id="gateSubjects" placeholder="e.g. DSA, OS, DBMS, CN" /></div>
+   <div class="field"><label for="collegeSubjects">College exam subjects / toughest ones</label><input id="collegeSubjects" placeholder="e.g. ML, DAA, Cloud, MLOps" /></div>
+   <div class="field"><label for="skillPriority">Tech skill priority (rank or comma-separated)</label><input id="skillPriority" value="System design, LeetCode, AWS" /></div>
+   <div class="field"><label for="runLevel">Running starting point</label><select id="runLevel"><option value="beginner">Beginner / returning after a break</option><option value="casual">Can jog 15–30 minutes</option><option value="regular">Already running regularly</option></select></div>
+   <div class="field"><label for="funHours">Minimum enjoyment / unstructured time per day</label><select id="funHours"><option value="1">1 hour</option><option value="2" selected>2 hours</option><option value="3">3 hours</option></select></div>
+   <div class="field"><label for="attendance">Attendance buffer / current attendance</label><input id="attendance" placeholder="e.g. 82%, 75% required" /></div>
+  </div>
+  <div class="field"><label for="extra">Anything else that affects energy or routine?</label><textarea id="extra" placeholder="e.g. late return from college, commute is tiring, assignment deadlines, preferred study length, days you feel drained..."></textarea></div>
+  <div class="bottom-bar"><span class="status">Already included: 1 hour commute each way, 2 hours morning prep, 1 hour lunch, 1 hour dinner.</span><button class="primary" id="copyAnswers">Copy answers for ChatGPT</button></div>
+  <div id="copyStatus" class="status" aria-live="polite"></div>
+ </section>
+ <div class="footer">The cooldown + food block is one hour inside the 4–6 PM window; dinner is a separate one-hour need and still needs a final placement. This is a planning prototype, not an attendance-rule checker. Class labels are read from the timetable image and may need correction. The drag/drop canvas is a demo schedule; answering the questions above is the next step before treating any study plan as final.</div>
+</div>
+<script>
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MIN_H=6, MAX_H=24, HOUR_PX=40;
+const $=id=>document.getElementById(id);
+let events=[];let dragId=null;let selectedId=null;
+const baseEvents=[
+// Monday
+{day:0,start:9,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'2 hours before leaving'},
+{day:0,start:11,dur:1,title:'Commute to college',type:'fixed',fixed:true,note:'1 hour'},
+{day:0,start:12,dur:1,title:'Cloud Computing · Theory',type:'fixed',fixed:true,note:'SMP · Room 4006'},
+{day:0,start:13,dur:1,title:'Design & Analysis of Algorithms · Theory',type:'fixed',fixed:true,note:'RCB · Room 4006'},
+{day:0,start:14,dur:1,title:'Commute home',type:'fixed',fixed:true,note:'1 hour'},
+{day:0,start:15,dur:1,title:'Lunch',type:'meal',fixed:true,note:'Flexible placement in demo'},
+{day:0,start:16,dur:1,title:'Cooldown + food (within 4–6 PM)',type:'meal',fixed:false,note:'1 hour; keep this inside the 4–6 PM window'},
+{day:0,start:18,dur:1,title:'College exam: revise one topic',type:'exam',note:'Light session'},
+{day:0,start:19,dur:1.5,title:'GATE: core subject + PYQs',type:'gate',note:'One focused block'},
+{day:0,start:20.5,dur:1,title:'Enjoyment / decompress',type:'life',note:'Protected downtime'},
+// Tuesday
+{day:1,start:8,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'2 hours'},
+{day:1,start:10,dur:1,title:'Commute to college',type:'fixed',fixed:true,note:'1 hour'},
+{day:1,start:11,dur:1,title:'CC Tutorial (verify label)',type:'fixed',fixed:true,note:'Image label partly obscured'},
+{day:1,start:12,dur:1,title:'Design & Analysis of Algorithms · Theory',type:'fixed',fixed:true,note:'RCB'},
+{day:1,start:13,dur:1,title:'Machine Learning · Theory',type:'fixed',fixed:true,note:'KSG · protected'},
+{day:1,start:14,dur:2,title:'Machine Learning · Lab',type:'fixed',fixed:true,note:'Protected lab'},
+{day:1,start:16,dur:1,title:'Commute home',type:'fixed',fixed:true,note:'1 hour; may clash with 4–6 window'},
+{day:1,start:17,dur:1,title:'Cooldown + food (within 4–6 PM)',type:'meal',fixed:false,note:'1 hour; 17:00–18:00 fits after the commute'},
+{day:1,start:18,dur:1,title:'Easy LeetCode practice',type:'build',note:'One or two problems, not a marathon'},
+{day:1,start:19,dur:1,title:'College exam: active recall',type:'exam',note:'Use questions, not rereading only'},
+{day:1,start:20,dur:1,title:'Free time',type:'life',note:'No guilt block'},
+// Wednesday
+{day:2,start:5,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'Early start because class begins at 08:00'},
+{day:2,start:7,dur:1,title:'Commute to college',type:'fixed',fixed:true,note:'1 hour'},
+{day:2,start:8,dur:1,title:'Cloud Computing · Theory',type:'fixed',fixed:true,note:'SMP · Room 4005'},
+{day:2,start:9,dur:1,title:'MLOps · Theory',type:'fixed',fixed:true,note:'Room 4005'},
+{day:2,start:10,dur:2,title:'Design & Analysis of Algorithms · Lab',type:'fixed',fixed:true,note:'Protected lab'},
+{day:2,start:12,dur:1,title:'Lunch',type:'meal',fixed:true,note:'May need to eat on campus'},
+{day:2,start:13,dur:1,title:'Machine Learning · Theory',type:'fixed',fixed:true,note:'KSG · protected'},
+{day:2,start:14,dur:1,title:'Design & Analysis of Algorithms · Theory',type:'fixed',fixed:true,note:'RCB'},
+{day:2,start:15,dur:1,title:'Commute home',type:'fixed',fixed:true,note:'1 hour'},
+{day:2,start:16,dur:1,title:'Cooldown + food (within 4–6 PM)',type:'meal',fixed:false,note:'1 hour; keep this inside the 4–6 PM window'},
+{day:2,start:18,dur:0.5,title:'Easy run / walk',type:'routine',note:'Low intensity after an early day'},
+{day:2,start:19,dur:1,title:'College exam: recall + weak areas',type:'exam',note:'Keep it light'},
+{day:2,start:20,dur:1,title:'Rest / entertainment',type:'life',note:'Early night encouraged'},
+// Thursday
+{day:3,start:6,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'2 hours'},
+{day:3,start:8,dur:1,title:'Commute to college',type:'fixed',fixed:true,note:'1 hour'},
+{day:3,start:9,dur:1,title:'MLOps · Theory',type:'fixed',fixed:true,note:'Room 4006'},
+{day:3,start:10,dur:2,title:'Campus gap / assignment buffer',type:'life',fixed:true,note:'Keep this as campus buffer unless leaving is practical'},
+{day:3,start:12,dur:1,title:'Lunch',type:'meal',fixed:true,note:'On campus'},
+{day:3,start:13,dur:2,title:'MLOps · Lab',type:'fixed',fixed:true,note:'Protected lab'},
+{day:3,start:15,dur:1,title:'Commute home',type:'fixed',fixed:true,note:'1 hour'},
+{day:3,start:16,dur:1,title:'Cooldown + food (within 4–6 PM)',type:'meal',fixed:false,note:'1 hour; keep this inside the 4–6 PM window'},
+{day:3,start:18,dur:1.5,title:'GATE: concept + PYQs',type:'gate',note:'Main study session'},
+{day:3,start:19.5,dur:1,title:'System design',type:'build',note:'One concept / diagram'},
+{day:3,start:20.5,dur:1,title:'Enjoyment',type:'life',note:'Protected downtime'},
+// Friday
+{day:4,start:6,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'2 hours'},
+{day:4,start:8,dur:1,title:'Commute to college',type:'fixed',fixed:true,note:'1 hour'},
+{day:4,start:9,dur:1,title:'MLOps · Theory',type:'fixed',fixed:true,note:'Room 4006'},
+{day:4,start:10,dur:1,title:'Commute home',type:'fixed',fixed:true,note:'Assumes class ends at 10:00'},
+{day:4,start:11,dur:1,title:'Lunch',type:'meal',fixed:true,note:'Flexible'},
+{day:4,start:12,dur:1.5,title:'College exam: weekly consolidation',type:'exam',note:'Get ahead while the week is fresh'},
+{day:4,start:14,dur:1.5,title:'GATE: timed practice',type:'gate',note:'Short test + error log'},
+{day:4,start:16,dur:1,title:'Cooldown + food (within 4–6 PM)',type:'meal',fixed:false,note:'1 hour; keep this inside the 4–6 PM window'},
+{day:4,start:18,dur:0.5,title:'Run / brisk walk',type:'routine',note:'Keep it conversational pace'},
+{day:4,start:19,dur:1.5,title:'Personal project',type:'build',note:'Ship one small increment'},
+{day:4,start:20.5,dur:1.5,title:'Free evening',type:'life',note:'Properly clock off'},
+// Saturday
+{day:5,start:8,dur:1,title:'Wake-up + slow morning',type:'life',note:'No alarm if sleep debt is high'},
+{day:5,start:9,dur:1,title:'Run / walk',type:'routine',note:'Beginner: walk-run intervals'},
+{day:5,start:10,dur:1,title:'Breakfast / reset',type:'meal',note:'Demo placeholder'},
+{day:5,start:11,dur:2,title:'GATE: deep work',type:'gate',note:'Hardest subject of the week'},
+{day:5,start:13,dur:1,title:'Lunch',type:'meal',fixed:true,note:'1 hour'},
+{day:5,start:14,dur:1.5,title:'College exam: practice',type:'exam',note:'Past papers / questions'},
+{day:5,start:16,dur:1,title:'Cooldown + food (within 4–6 PM)',type:'meal',fixed:false,note:'1 hour; keep this inside the 4–6 PM window'},
+{day:5,start:18,dur:1.5,title:'AWS tutorial',type:'build',note:'Watch + build, do not just binge videos'},
+{day:5,start:20,dur:2,title:'Friends / hobby / gaming',type:'life',note:'Protected enjoyment'},
+// Sunday
+{day:6,start:8,dur:1,title:'Slow morning',type:'life',note:'Recovery matters'},
+{day:6,start:9,dur:1,title:'Easy run / long walk',type:'routine',note:'Optional recovery pace'},
+{day:6,start:11,dur:1.5,title:'GATE: weekly revision',type:'gate',note:'Spaced recall + error log'},
+{day:6,start:13,dur:1,title:'Lunch',type:'meal',fixed:true,note:'1 hour'},
+{day:6,start:14,dur:1.5,title:'College exam: plan next week',type:'exam',note:'List topics and deadlines'},
+{day:6,start:16,dur:1,title:'Cooldown + food (within 4–6 PM)',type:'meal',fixed:false,note:'1 hour; keep this inside the 4–6 PM window'},
+{day:6,start:18,dur:1,title:'Plan week + assignments',type:'build',note:'Only choose top 3 outcomes'},
+{day:6,start:19,dur:2,title:'Properly off-duty',type:'life',note:'Avoid Sunday-night overplanning'}
+];
+function makeId(){return 'e'+Math.random().toString(36).slice(2,10)}
+function cloneBase(){events=baseEvents.map(e=>({...e,id:makeId()}));}
+function timeText(t){let h=Math.floor(t),m=Math.round((t-h)*60);return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')}
+function categoryName(t){return ({gate:'GATE',exam:'College exam',build:'Tech skills',routine:'Running / health',life:'Life / rest',meal:'Meal / personal',fixed:'Fixed commitment'})[t]||t}
+function render(){const cal=$('calendar');cal.innerHTML='';const corner=document.createElement('div');corner.className='time-head';cal.appendChild(corner);DAYS.forEach((d,i)=>{let h=document.createElement('div');h.className='day-head';h.innerHTML=d+'<small>'+({0:'2 classes',1:'tutorial + ML lab',2:'early start + lab',3:'MLOps lab',4:'1 class',5:'flex day',6:'reset day'}[i])+'</small>';cal.appendChild(h)});let labels=document.createElement('div');labels.className='time-labels';for(let h=MIN_H;h<MAX_H;h++){let l=document.createElement('div');l.className='time-label';l.textContent=String(h).padStart(2,'0')+':00';labels.appendChild(l)}cal.appendChild(labels);DAYS.forEach((day,di)=>{let col=document.createElement('div');col.className='day-col';col.dataset.day=di;col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('dragover')});col.addEventListener('dragleave',()=>col.classList.remove('dragover'));col.addEventListener('drop',e=>{e.preventDefault();col.classList.remove('dragover');const id=e.dataTransfer.getData('text/plain');const ev=events.find(x=>x.id===id);if(!ev||ev.fixed)return;let r=col.getBoundingClientRect();let y=e.clientY-r.top;let start=Math.round((y/HOUR_PX+MIN_H)*2)/2;start=Math.max(MIN_H,Math.min(MAX_H-ev.dur,start));ev.day=di;ev.start=start;render();updateMetrics();saveLocal(false);$('statusText').textContent=`Moved “${ev.title}” to ${day} at ${timeText(start)}.`});events.filter(e=>e.day===di).forEach(ev=>{let card=document.createElement('div');card.className='event '+ev.type+(ev.fixed?' fixed':' draggable');card.style.top=((ev.start-MIN_H)*HOUR_PX+2)+'px';card.style.height=Math.max(ev.dur*HOUR_PX-4,18)+'px';card.title=`${timeText(ev.start)}–${timeText(ev.start+ev.dur)} · ${ev.note||categoryName(ev.type)}`;card.innerHTML=`${ev.fixed?'<span class="lock">🔒</span>':''}<strong>${escapeHTML(ev.title)}</strong><small>${timeText(ev.start)}–${timeText(ev.start+ev.dur)}${ev.note?' · '+escapeHTML(ev.note):''}</small>`;if(!ev.fixed){card.draggable=true;card.addEventListener('dragstart',e=>{dragId=ev.id;e.dataTransfer.setData('text/plain',ev.id);e.dataTransfer.effectAllowed='move'});card.addEventListener('click',()=>editEvent(ev.id));}else card.style.cursor='default';col.appendChild(card)});cal.appendChild(col)});$('eventCount').textContent=events.length+' blocks';renderWorkload();renderCollisionCheck();}
+function escapeHTML(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function editEvent(id){let e=events.find(x=>x.id===id);if(!e||e.fixed)return;selectedId=id;$('editingId').value=id;$('taskTitle').value=e.title;$('taskDay').value=DAYS[e.day];$('taskType').value=e.type;$('taskStart').value=timeText(e.start);$('taskDuration').value=String(e.dur);$('taskNote').value=e.note||'';$('addBtn').textContent='Update block';$('deleteBtn').style.display='block';$('statusText').textContent='Editing: '+e.title;window.scrollTo({top:0,behavior:'smooth'});}
+function clearEditor(){$('editingId').value='';$('taskTitle').value='';$('taskNote').value='';$('addBtn').textContent='Add block';$('deleteBtn').style.display='none';selectedId=null}
+$('deleteBtn').onclick=()=>{const id=$('editingId').value;if(!id)return;const e=events.find(x=>x.id===id);if(e&& !e.fixed && confirm(`Delete “${e.title}”?`)){events=events.filter(x=>x.id!==id);clearEditor();render();updateMetrics();saveLocal(false);$('statusText').textContent='Block deleted.'}};
+function renderCollisionCheck(){const overlaps=[];for(let d=0;d<7;d++){const arr=events.filter(e=>e.day===d).slice().sort((a,b)=>a.start-b.start);for(let i=0;i<arr.length;i++){for(let j=i+1;j<arr.length;j++){if(arr[j].start>=arr[i].start+arr[i].dur-0.001)break;overlaps.push({day:d,a:arr[i],b:arr[j]})}}}const box=$('collisionBox');if(!overlaps.length){box.className='notice blue';box.textContent='Overlap checker: no block conflicts detected. Check travel and meal timing against your real day before relying on this demo.';return}box.className='notice red';box.innerHTML='<b>Potential scheduling clashes ('+overlaps.length+')</b><br>'+overlaps.slice(0,5).map(o=>`${DAYS[o.day]}: ${escapeHTML(o.a.title)} (${timeText(o.a.start)}–${timeText(o.a.start+o.a.dur)}) overlaps ${escapeHTML(o.b.title)} (${timeText(o.b.start)}–${timeText(o.b.start+o.b.dur)})`).join('<br>')+(overlaps.length>5?'<br>…and '+(overlaps.length-5)+' more.':'')+'<br><small>Drag one movable block elsewhere or edit its time. Fixed commitments remain locked in this demo.</small>'}
+$('addBtn').onclick=()=>{const title=$('taskTitle').value.trim();if(!title){$('taskTitle').focus();return}let [h,m]=$('taskStart').value.split(':').map(Number);let start=h+m/60,dur=Number($('taskDuration').value),day=DAYS.indexOf($('taskDay').value),type=$('taskType').value,note=$('taskNote').value.trim(),id=$('editingId').value;if(start<MIN_H||start+dur>MAX_H){$('statusText').textContent='Keep blocks between 06:00 and midnight.';return}if(id){let e=events.find(x=>x.id===id);Object.assign(e,{title,day,start,dur,type,note});}else events.push({id:makeId(),title,day,start,dur,type,note,fixed:false});clearEditor();render();updateMetrics();saveLocal(false);$('statusText').textContent='Block saved in this demo. Check for overlaps before relying on the schedule.'};
+$('cancelEditBtn').onclick=clearEditor;
+function renderWorkload(){let mins={gate:0,exam:0,build:0,routine:0,life:0};events.forEach(e=>{if(mins[e.type]!==undefined)mins[e.type]+=e.dur});let totalFocus=mins.gate+mins.exam+mins.build;let data=[['GATE',mins.gate,'#91b4f6'],['College exam',mins.exam,'#efc477'],['Tech skills / project',mins.build,'#b4a2ee'],['Run / health',mins.routine,'#78c9b3'],['Life / enjoyment',mins.life,'#7ccba0']];$('workloadList').innerHTML=data.map(([n,v,c])=>`<div class="task-row"><span class="swatch" style="background:${c}"></span><div><b>${n}</b><small>${formatHours(v)} planned per week</small></div></div>`).join('');let all=totalFocus+mins.routine+mins.life;$('workloadBar').style.width=(all?Math.min(100,mins.life/all*100):0)+'%';$('workloadCaption').textContent=`Demo focus blocks: ${formatHours(totalFocus)}. Life / enjoyment blocks: ${formatHours(mins.life)}. These totals exclude fixed classes, prep, travel and meals.`}
+function formatHours(n){return Number(n.toFixed(1))+' h'}
+function updateMetrics(){let focus=events.filter(e=>['gate','exam','build'].includes(e.type)).reduce((s,e)=>s+e.dur,0);let life=events.filter(e=>['life','routine'].includes(e.type)).reduce((s,e)=>s+e.dur,0);$('focusMetric').textContent=formatHours(focus);$('lifeMetric').textContent=formatHours(life);}
+function saveLocal(show=true){try{localStorage.setItem('routineLabEvents',JSON.stringify(events));if(show)$('statusText').textContent='Saved in this browser on this device.';}catch(e){$('statusText').textContent='Could not save locally in this browser; export JSON to keep a backup.'}}
+$('saveBtn').onclick=()=>saveLocal(true);$('resetBtn').onclick=()=>{if(confirm('Reset all blocks to the original demo? Your current local edits will be replaced.')){cloneBase();clearEditor();render();updateMetrics();saveLocal(false);$('statusText').textContent='Demo reset.'}};
+$('suggestBtn').onclick=()=>{ // simple fatigue-aware trim: remove one optional evening skills block and keep essentials
+ const candidates=events.filter(e=>!e.fixed&&e.type==='build').sort((a,b)=>b.start-a.start);if(candidates.length){let e=candidates[0];if(confirm(`A lighter-week demo would remove “${e.title}” on ${DAYS[e.day]} and leave that time free. Do this?`)){events.splice(events.findIndex(x=>x.id===e.id),1);render();updateMetrics();saveLocal(false);$('statusText').textContent='Removed one optional block. Recovery time increased.'}}else alert('No optional tech-skill blocks to trim.');};
+$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),events,answers:getAnswers()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='routine-lab-week.json';a.click();URL.revokeObjectURL(a.href)};
+function getAnswers(){return {wake:$('wake').value,sleep:$('sleep').value,weekend:$('weekend').value,eatwindow:$('eatwindow').value,gateLevel:$('gateLevel').value,examLoad:$('examLoad').value,gateSubjects:$('gateSubjects').value,collegeSubjects:$('collegeSubjects').value,skillPriority:$('skillPriority').value,runLevel:$('runLevel').value,funHours:$('funHours').value,attendance:$('attendance').value,extra:$('extra').value,commute:'1 hour each way',morningPrep:'2 hours',lunch:'1 hour',dinner:'1 hour',gateCountdownDays:109,collegeExamCountdownDays:30}}
+$('copyAnswers').onclick=()=>{let a=getAnswers();let str='Routine planning answers:\n'+Object.entries(a).map(([k,v])=>`${k}: ${v||'(not answered)'}`).join('\n')+'\nPlease create a sustainable weekly routine from these answers and the current college timetable. Protect ML and all labs. Keep enjoyment time. Do not assume I can study effectively every free hour.';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(str).then(()=>$('copyStatus').textContent='Copied. Paste the answers into our chat.').catch(()=>fallbackCopy(str))}else fallbackCopy(str)};
+function fallbackCopy(str){const ta=document.createElement('textarea');ta.value=str;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');$('copyStatus').textContent='Copied. Paste the answers into our chat.'}catch(e){$('copyStatus').textContent='Clipboard not available. The answers are ready in the JSON export instead.'}ta.remove()}
+try{let saved=localStorage.getItem('routineLabEvents');if(saved){events=JSON.parse(saved)}else cloneBase()}catch(e){cloneBase()}render();updateMetrics();
+</script>
+</body>
+</html>
