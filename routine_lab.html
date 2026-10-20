@@ -141,6 +141,8 @@ h1{font-size:clamp(26px,2.8vw,40px);letter-spacing:-.03em;margin:5px 0 8px;font-
 .event.routine{background:var(--routine);border-left:3px solid var(--routine-border)}
 .event.draggable{cursor:grab}
 .event.draggable:active{cursor:grabbing}
+.lock-toggle{float:right;font-size:11px;cursor:pointer;padding:1px 4px;border-radius:4px;opacity:.75;transition:all .15s ease;user-select:none}
+.lock-toggle:hover{opacity:1;background:rgba(0,0,0,0.08);transform:scale(1.15)}
 .lock-icon{float:right;font-size:10px;opacity:.7}
 .side{display:flex;flex-direction:column;gap:14px}
 .side .panel{padding:16px}
@@ -632,7 +634,19 @@ function render(){
       card.style.top=((ev.start-MIN_H)*HOUR_PX+2)+'px';
       card.style.height=Math.max(ev.dur*HOUR_PX-4,18)+'px';
       card.title=`${timeText(ev.start)}–${timeText(ev.start+ev.dur)} · ${ev.note||categoryName(ev.type)} ${ev.fixed?'(Locked)':''}`;
-      card.innerHTML=`${ev.fixed?'<span class="lock-icon">🔒</span>':''}<strong>${escapeHTML(ev.title)}</strong><small>${timeText(ev.start)}–${timeText(ev.start+ev.dur)}${ev.note?' · '+escapeHTML(ev.note):''}</small>`;
+      card.innerHTML=`<span class="lock-toggle" title="${ev.fixed?'Locked (Click to unlock & drag)':'Unlocked (Click to lock in place)'}">${ev.fixed?'🔒':'🔓'}</span><strong>${escapeHTML(ev.title)}</strong><small>${timeText(ev.start)}–${timeText(ev.start+ev.dur)}${ev.note?' · '+escapeHTML(ev.note):''}</small>`;
+
+      const lockToggle = card.querySelector('.lock-toggle');
+      if(lockToggle){
+        lockToggle.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          ev.fixed = !ev.fixed;
+          render();
+          updateMetrics();
+          scheduleAutoSave();
+          $('statusText').textContent = `"${ev.title}" is now ${ev.fixed ? 'locked 🔒' : 'unlocked 🔓 (draggable)'}.`;
+        });
+      }
 
       if(!ev.fixed){
         card.draggable=true;
