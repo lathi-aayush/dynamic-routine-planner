@@ -1,450 +1,589 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Routine Lab — Dynamic Weekly Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* -------------------------------------------------------------
+   shadcn/ui Zinc Design Tokens (Light & Dark)
+   ------------------------------------------------------------- */
 :root {
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --text-subtle: #94a3b8;
-  --border: #e2e8f0;
-  --border-subtle: #f1f5f9;
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --radius: 0.5rem;
 
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
+  /* Routine Category Tokens (Subtle pastel tints + solid borders) */
+  --cat-gate-bg: #eff6ff;
+  --cat-gate-border: #3b82f6;
+  --cat-gate-text: #1d4ed8;
 
-  /* Category color tokens (subtle pastels + refined borders) */
-  --gate-bg: #eff6ff;
-  --gate-border: #3b82f6;
-  --gate-text: #1e40af;
+  --cat-exam-bg: #fffbeb;
+  --cat-exam-border: #f59e0b;
+  --cat-exam-text: #b45309;
 
-  --exam-bg: #fffbeb;
-  --exam-border: #f59e0b;
-  --exam-text: #92400e;
+  --cat-build-bg: #f5f3ff;
+  --cat-build-border: #8b5cf6;
+  --cat-build-text: #6d28d9;
 
-  --build-bg: #f5f3ff;
-  --build-border: #8b5cf6;
-  --build-text: #5b21b6;
+  --cat-routine-bg: #ecfdf5;
+  --cat-routine-border: #10b981;
+  --cat-routine-text: #047857;
 
-  --routine-bg: #f0fdfa;
-  --routine-border: #14b8a6;
-  --routine-text: #0f766e;
+  --cat-life-bg: #f0fdf4;
+  --cat-life-border: #22c55e;
+  --cat-life-text: #15803d;
 
-  --life-bg: #f0fdf4;
-  --life-border: #22c55e;
-  --life-text: #166534;
+  --cat-meal-bg: #fff1f2;
+  --cat-meal-border: #f43f5e;
+  --cat-meal-text: #be123c;
 
-  --meal-bg: #fff1f2;
-  --meal-border: #f43f5e;
-  --meal-text: #9f1239;
+  --cat-fixed-bg: #f4f4f5;
+  --cat-fixed-border: #71717a;
+  --cat-fixed-text: #3f3f46;
 
-  --fixed-bg: #f8fafc;
-  --fixed-border: #64748b;
-  --fixed-text: #334155;
+  --grid-line: #f4f4f5;
+  --grid-line-hour: #e4e4e7;
+}
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+html.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 5.5%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 5.5%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 14%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 14%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 14%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 16%;
+  --input: 240 3.7% 16%;
+  --ring: 240 4.9% 83.9%;
 
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-card: 0 2px 8px -2px rgba(15, 23, 42, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.04);
-  --shadow-dropdown: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+  --cat-gate-bg: rgba(30, 58, 138, 0.22);
+  --cat-gate-border: #60a5fa;
+  --cat-gate-text: #bfdbfe;
+
+  --cat-exam-bg: rgba(120, 53, 15, 0.22);
+  --cat-exam-border: #fbbf24;
+  --cat-exam-text: #fef3c7;
+
+  --cat-build-bg: rgba(76, 29, 149, 0.22);
+  --cat-build-border: #a78bfa;
+  --cat-build-text: #ede9fe;
+
+  --cat-routine-bg: rgba(6, 78, 59, 0.22);
+  --cat-routine-border: #34d399;
+  --cat-routine-text: #d1fae5;
+
+  --cat-life-bg: rgba(20, 83, 45, 0.22);
+  --cat-life-border: #4ade80;
+  --cat-life-text: #dcfce7;
+
+  --cat-meal-bg: rgba(136, 19, 55, 0.22);
+  --cat-meal-border: #fb7185;
+  --cat-meal-text: #ffe4e6;
+
+  --cat-fixed-bg: rgba(39, 39, 42, 0.5);
+  --cat-fixed-border: #a1a1aa;
+  --cat-fixed-text: #e4e4e7;
+
+  --grid-line: #18181b;
+  --grid-line-hour: #27272a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  background: var(--bg);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: var(--text);
-  line-height: 1.4;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* App Shell */
+/* -------------------------------------------------------------
+   Layout Shell (Clean & Structured)
+   ------------------------------------------------------------- */
 .app-shell {
-  max-width: 1560px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 24px 20px 40px;
+  padding: 16px 20px 32px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
-/* Header */
-.top-nav {
+/* -------------------------------------------------------------
+   Topbar (Flat single-row navigation — No nested headers)
+   ------------------------------------------------------------- */
+.topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 16px;
-  padding-bottom: 8px;
+  gap: 12px;
+  padding: 8px 12px;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 
-.brand-group {
+.brand-row {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.brand-logo {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #2563eb, #06b6d4);
-  color: white;
-  display: flex;
+.brand-pill {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 750;
-  font-size: 18px;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-}
-
-.brand-text h1 {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.brand-badge {
-  font-size: 11px;
+  gap: 7px;
+  padding: 4px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
+  font-size: 13px;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--border-subtle);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
+  letter-spacing: -0.01em;
+  color: hsl(var(--foreground));
+  user-select: none;
+}
+.brand-icon {
+  color: hsl(var(--foreground));
+  flex-shrink: 0;
 }
 
-.brand-desc {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.nav-actions {
+/* Inline KPIs (Flat key metrics with tooltips) */
+.kpi-strip {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
-/* Button UI (shadcn style) */
-button {
+.kpi-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  font-size: 12px;
+  cursor: default;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.kpi-pill:hover {
+  background-color: hsl(var(--accent));
+}
+
+.kpi-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-gate { background-color: var(--cat-gate-border); }
+.dot-exam { background-color: var(--cat-exam-border); }
+.dot-focus { background-color: var(--cat-build-border); }
+.dot-rest { background-color: var(--cat-routine-border); }
+
+.kpi-name {
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+}
+.kpi-val {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  font-size: 12px;
+}
+
+/* Topbar Action Controls */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  background: hsl(var(--muted));
+  font-size: 11.5px;
+  color: hsl(var(--muted-foreground));
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  font-size: 11.5px;
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}
+.user-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+/* -------------------------------------------------------------
+   shadcn/ui Button Variants
+   ------------------------------------------------------------- */
+.btn {
   font-family: inherit;
-  font-size: 13px;
-  font-weight: 550;
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 10px;
+  height: 32px;
+  border-radius: calc(var(--radius) - 2px);
   border: 1px solid transparent;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   transition: all 0.15s ease;
   white-space: nowrap;
+  user-select: none;
+  text-decoration: none;
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
+.btn-default {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
 }
-.btn-primary:hover { background: var(--primary-hover); }
+.btn-default:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.btn-outline {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--input));
+  color: hsl(var(--foreground));
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+.btn-outline:hover:not(:disabled) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
 
 .btn-secondary {
-  background: var(--surface);
-  border-color: var(--border);
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
 }
-.btn-secondary:hover {
-  background: var(--border-subtle);
-  border-color: #cbd5e1;
+.btn-secondary:hover:not(:disabled) {
+  background-color: hsl(var(--muted));
 }
 
-.btn-danger {
-  background: #fff1f2;
-  border-color: #ffe4e6;
-  color: #be123c;
+.btn-ghost {
+  background-color: transparent;
+  color: hsl(var(--foreground));
 }
-.btn-danger:hover { background: #ffe4e6; }
-
-.btn-icon {
-  padding: 8px 10px;
+.btn-ghost:hover:not(:disabled) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
-/* User Status Chip */
-.user-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  font-size: 12px;
-  font-weight: 550;
-  color: var(--text-muted);
+.btn-destructive {
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
 }
-.user-dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; }
-
-/* Metrics Summary Bar */
-.metrics-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+.btn-destructive:hover:not(:disabled) {
+  opacity: 0.9;
 }
 
-@media (max-width: 900px) {
-  .metrics-bar { grid-template-columns: repeat(2, 1fr); }
-}
-
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px 18px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-}
-.stat-card.c-gate::before { background: var(--gate-border); }
-.stat-card.c-exam::before { background: var(--exam-border); }
-.stat-card.c-focus::before { background: var(--build-border); }
-.stat-card.c-rest::before { background: var(--life-border); }
-
-.stat-label {
+.btn-sm {
+  height: 30px;
+  padding: 0 9px;
   font-size: 11.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
+}
+.btn-icon {
+  width: 32px;
+  padding: 0;
 }
 
-.stat-value {
-  font-size: 24px;
-  font-weight: 750;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-
-.stat-sub {
-  font-size: 12px;
-  color: var(--text-subtle);
-}
-
-/* Main Split View */
-.main-view {
+/* -------------------------------------------------------------
+   Main Split Layout (Grid + Sidebar)
+   ------------------------------------------------------------- */
+.main-grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 16px;
+  grid-template-columns: 1fr 330px;
+  gap: 14px;
   align-items: start;
 }
 
-@media (max-width: 1100px) {
-  .main-view { grid-template-columns: 1fr; }
+@media (max-width: 1180px) {
+  .main-grid { grid-template-columns: 1fr; }
 }
 
-/* Canvas Panel */
-.canvas-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 18px;
-  box-shadow: var(--shadow-card);
+/* -------------------------------------------------------------
+   Calendar Canvas Panel (Clean Card Wrapper)
+   ------------------------------------------------------------- */
+.canvas-card {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
 }
 
-.canvas-header {
+/* Flat Canvas Toolbar (Replaces nested headings) */
+.canvas-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
-.canvas-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+}
+
+.legend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: calc(var(--radius) - 3px);
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  font-weight: 500;
+  cursor: default;
+}
+.legend-square {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.toolbar-right {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Legend */
-.legend-strip {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--text-muted);
+.badge-counter {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 8px;
+  border-radius: calc(var(--radius) - 3px);
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
 }
 
-.legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.legend-pill {
-  width: 9px;
-  height: 9px;
-  border-radius: 2px;
-}
-
-/* Calendar Grid */
-.calendar-outer {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+/* Calendar Viewport */
+.calendar-viewport {
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
   overflow-x: auto;
-  background: var(--surface);
+  background-color: hsl(var(--card));
 }
 
 .calendar-grid {
-  min-width: 1040px;
+  min-width: 1020px;
   display: grid;
-  grid-template-columns: 56px repeat(7, minmax(130px, 1fr));
+  grid-template-columns: 52px repeat(7, minmax(130px, 1fr));
   position: relative;
 }
 
 .grid-corner {
-  background: #f8fafc;
-  border-bottom: 1px solid var(--border);
+  background: hsl(var(--secondary));
+  border-bottom: 1px solid hsl(var(--border));
+  border-right: 1px solid hsl(var(--border));
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 6;
 }
 
 .day-header {
-  height: 44px;
-  background: #f8fafc;
-  border-bottom: 1px solid var(--border);
-  border-left: 1px solid var(--border);
-  padding: 8px 6px;
+  height: 38px;
+  background: hsl(var(--secondary));
+  border-bottom: 1px solid hsl(var(--border));
+  border-right: 1px solid hsl(var(--border));
+  padding: 5px 6px;
   text-align: center;
-  font-weight: 650;
-  font-size: 12px;
+  font-weight: 600;
+  font-size: 11.5px;
+  color: hsl(var(--foreground));
   position: sticky;
   top: 0;
-  z-index: 4;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
 }
-
 .day-header small {
   display: block;
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-size: 9.5px;
+  font-weight: 400;
+  color: hsl(var(--muted-foreground));
+  font-family: inherit;
 }
 
 .hour-labels {
   height: 720px;
-  background: #f8fafc;
+  background: hsl(var(--secondary));
   position: relative;
+  border-right: 1px solid hsl(var(--border));
 }
 
 .hour-row {
   height: 40px;
-  padding: 3px 6px;
+  padding: 2px 5px;
   text-align: right;
   font-size: 10px;
-  font-family: monospace;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .day-track {
   height: 720px;
   position: relative;
-  border-left: 1px solid var(--border);
+  border-right: 1px solid hsl(var(--border));
   background-image:
-    repeating-linear-gradient(to bottom, transparent 0, transparent 39px, #e9ecf2 39px, #e9ecf2 40px),
-    repeating-linear-gradient(to bottom, transparent 0, transparent 19px, #f8fafc 19px, #f8fafc 20px);
+    repeating-linear-gradient(to bottom, transparent 0, transparent 39px, var(--grid-line-hour) 39px, var(--grid-line-hour) 40px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 19px, var(--grid-line) 19px, var(--grid-line) 20px);
 }
 
 .day-track.dragover {
-  background-color: #eff6ff;
-  outline: 2px dashed var(--primary);
-  outline-offset: -3px;
+  background-color: rgba(59, 130, 246, 0.08);
+  outline: 2px dashed hsl(var(--primary));
+  outline-offset: -2px;
 }
 
-/* Event Cards */
+/* Event Cards (Sleek, minimalist, high contrast) */
 .event-card {
   position: absolute;
-  left: 3px;
-  right: 3px;
-  border-radius: var(--radius-sm);
-  padding: 5px 7px;
+  left: 2px;
+  right: 2px;
+  border-radius: 4px;
+  padding: 4px 6px;
   overflow: hidden;
-  font-size: 10.5px;
+  font-size: 10px;
   line-height: 1.25;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-left-width: 3px;
   z-index: 2;
   user-select: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-  transition: transform 0.1s, box-shadow 0.1s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  backdrop-filter: blur(2px);
 }
-
 .event-card:hover {
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  z-index: 10;
 }
 
 .event-card strong {
   display: block;
   font-size: 10.5px;
-  font-weight: 650;
+  font-weight: 600;
   margin-bottom: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 .event-card small {
-  font-size: 9.5px;
-  opacity: 0.8;
+  font-size: 9px;
+  opacity: 0.85;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .event-card.draggable { cursor: grab; }
 .event-card.draggable:active { cursor: grabbing; }
 
-/* Themes per block type */
-.event-card.gate { background: var(--gate-bg); border-left: 3px solid var(--gate-border); color: var(--gate-text); }
-.event-card.exam { background: var(--exam-bg); border-left: 3px solid var(--exam-border); color: var(--exam-text); }
-.event-card.build { background: var(--build-bg); border-left: 3px solid var(--build-border); color: var(--build-text); }
-.event-card.routine { background: var(--routine-bg); border-left: 3px solid var(--routine-border); color: var(--routine-text); }
-.event-card.life { background: var(--life-bg); border-left: 3px solid var(--life-border); color: var(--life-text); }
-.event-card.meal { background: var(--meal-bg); border-left: 3px solid var(--meal-border); color: var(--meal-text); }
-.event-card.fixed { background: var(--fixed-bg); border-left: 3px solid var(--fixed-border); color: var(--fixed-text); }
+/* Category themes */
+.event-card.gate { background: var(--cat-gate-bg); border-left-color: var(--cat-gate-border); color: var(--cat-gate-text); }
+.event-card.exam { background: var(--cat-exam-bg); border-left-color: var(--cat-exam-border); color: var(--cat-exam-text); }
+.event-card.build { background: var(--cat-build-bg); border-left-color: var(--cat-build-border); color: var(--cat-build-text); }
+.event-card.routine { background: var(--cat-routine-bg); border-left-color: var(--cat-routine-border); color: var(--cat-routine-text); }
+.event-card.life { background: var(--cat-life-bg); border-left-color: var(--cat-life-border); color: var(--cat-life-text); }
+.event-card.meal { background: var(--cat-meal-bg); border-left-color: var(--cat-meal-border); color: var(--cat-meal-text); }
+.event-card.fixed { background: var(--cat-fixed-bg); border-left-color: var(--cat-fixed-border); color: var(--cat-fixed-text); }
 
 .lock-pill {
   float: right;
-  font-size: 11px;
+  font-size: 10px;
   cursor: pointer;
-  padding: 1px 4px;
-  border-radius: 4px;
+  padding: 1px 3px;
+  border-radius: 3px;
   opacity: 0.7;
   transition: transform 0.12s, opacity 0.12s;
+  background: transparent;
+  border: none;
+  line-height: 1;
 }
 .lock-pill:hover {
   opacity: 1;
@@ -452,77 +591,75 @@ button {
   transform: scale(1.15);
 }
 
-/* Notice Bar */
-.status-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding-top: 4px;
-}
-
-.status-msg {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-/* Sidebar Components */
+/* -------------------------------------------------------------
+   Sidebar (Flat shadcn Cards — No header bloat)
+   ------------------------------------------------------------- */
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .panel-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 16px;
-  box-shadow: var(--shadow-card);
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
 }
 
-.panel-head {
+/* Flat Card Head (Direct status pill without bulky H2/H3) */
+.card-meta-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
-.panel-title {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+.badge-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: calc(var(--radius) - 3px);
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
 }
 
+/* Form Controls (shadcn standard Input / Select) */
 .field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 4px;
+  margin-bottom: 9px;
 }
 
 .field label {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
 }
 
 .input, select, textarea {
   width: 100%;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 8px 10px;
-  font-size: 12.5px;
-  background: #fff;
-  color: var(--text);
+  height: 32px;
+  border: 1px solid hsl(var(--input));
+  border-radius: calc(var(--radius) - 2px);
+  padding: 0 10px;
+  font-size: 12px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
 }
-
 .input:focus, select:focus, textarea:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 1px hsl(var(--ring));
 }
 
 .grid-2 {
@@ -531,90 +668,164 @@ button {
   gap: 8px;
 }
 
-/* Progress / Balance Section */
+/* Checkbox Toggle */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  user-select: none;
+  margin-top: 2px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid hsl(var(--input));
+  accent-color: hsl(var(--primary));
+  cursor: pointer;
+}
+
+/* Workload Balance List */
 .workload-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 10px;
-  border-radius: var(--radius-sm);
-  background: #f8fafc;
-  margin-bottom: 6px;
-  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: calc(var(--radius) - 3px);
+  background: hsl(var(--secondary));
+  margin-bottom: 5px;
+  font-size: 11.5px;
 }
-
 .workload-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+  color: hsl(var(--foreground));
 }
 
 .workload-bar {
-  height: 6px;
-  background: #e2e8f0;
+  height: 5px;
+  background: hsl(var(--secondary));
   border-radius: 999px;
   overflow: hidden;
   margin: 10px 0 6px;
+  border: 1px solid hsl(var(--border));
 }
 .workload-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #10b981);
+  background: hsl(var(--primary));
   width: 50%;
   border-radius: 999px;
+  transition: width 0.2s ease;
 }
 
-/* Attendance Guard Badges */
+/* Attendance Guard Callouts (Flat cards, no headings) */
 .shield-badge {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  margin-bottom: 8px;
-  font-size: 12px;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  margin-bottom: 6px;
+  font-size: 11px;
+  line-height: 1.35;
+  border: 1px solid transparent;
 }
 .shield-badge.mandatory {
-  background: #ecfdf5;
-  border: 1px solid #d1fae5;
-  color: #065f46;
+  background: var(--cat-routine-bg);
+  border-color: var(--cat-routine-border);
+  color: var(--cat-routine-text);
 }
 .shield-badge.droppable {
-  background: #fffbeb;
-  border: 1px solid #fef3c7;
-  color: #92400e;
+  background: var(--cat-exam-bg);
+  border-color: var(--cat-exam-border);
+  color: var(--cat-exam-text);
 }
 
-/* Modal */
+/* -------------------------------------------------------------
+   Modal Dialog (shadcn Dialog Overlay & Content)
+   ------------------------------------------------------------- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(4px);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
 }
 .modal-overlay.open { display: flex; }
 
 .modal-box {
-  background: #fff;
-  border-radius: var(--radius-xl);
-  padding: 22px;
-  max-width: 400px;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-radius: var(--radius);
+  padding: 20px;
+  max-width: 380px;
   width: 90%;
-  box-shadow: var(--shadow-dropdown);
-  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border: 1px solid hsl(var(--border));
+  animation: scaleIn 0.15s ease-out;
 }
-.modal-box h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-.modal-box p { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; }
+.modal-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+.modal-desc {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 14px;
+}
 
-/* Subtle footer */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* -------------------------------------------------------------
+   Accessible Tooltip Component (Mandatory per tooltips.md)
+   ------------------------------------------------------------- */
+.tooltip-portal {
+  position: fixed;
+  z-index: 1200;
+  pointer-events: none;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: calc(var(--radius) - 3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(2px) scale(0.96);
+  transition: opacity 120ms ease, transform 120ms ease;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+.tooltip-portal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Subtle flat footer */
 .app-footer {
   text-align: center;
-  font-size: 11.5px;
-  color: var(--text-subtle);
-  padding-top: 10px;
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  opacity: 0.7;
+  padding-top: 8px;
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -622,97 +833,116 @@ button {
 <body>
 <div class="app-shell">
 
-  <!-- Header -->
-  <header class="top-nav">
-    <div class="brand-group">
-      <div class="brand-logo">⚡</div>
-      <div class="brand-text">
-        <h1>Routine Lab <span class="brand-badge">Optimizer</span></h1>
-        <p class="brand-desc">Balanced schedule for GATE (109d), College (30d), Dev & Recovery</p>
+  <!-- Flat Topbar Navigation (No H1/H2 header clutter) -->
+  <header class="topbar">
+    <div class="brand-row">
+      <div class="brand-pill" data-tooltip="Routine Lab: Dynamic Timetable & Routine Optimizer">
+        <svg class="brand-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+        <span>Routine Lab</span>
+      </div>
+
+      <!-- Flat Inline KPI Strip -->
+      <div class="kpi-strip">
+        <div class="kpi-pill" data-tooltip="GATE in 109 days · Core CS & PYQ deep work blocks">
+          <span class="kpi-dot dot-gate"></span>
+          <span class="kpi-name">GATE</span>
+          <span class="kpi-val">109d</span>
+        </div>
+        <div class="kpi-pill" data-tooltip="College exams in 30 days · Syllabus revision & notes">
+          <span class="kpi-dot dot-exam"></span>
+          <span class="kpi-name">College Exam</span>
+          <span class="kpi-val">30d</span>
+        </div>
+        <div class="kpi-pill" data-tooltip="Total weekly deep focus (GATE + Exam + Tech)">
+          <span class="kpi-dot dot-focus"></span>
+          <span class="kpi-name">Focus</span>
+          <span class="kpi-val" id="focusMetric">—</span>
+        </div>
+        <div class="kpi-pill" data-tooltip="Protected weekly recovery (Running + Rest + Food)">
+          <span class="kpi-dot dot-rest"></span>
+          <span class="kpi-name">Recovery</span>
+          <span class="kpi-val" id="lifeMetric">—</span>
+        </div>
       </div>
     </div>
-    <div class="nav-actions">
-      <div class="user-chip" id="authChip">
+
+    <!-- Actions & Controls -->
+    <div class="topbar-actions">
+      <div class="status-chip" data-tooltip="Live status indicator">
+        <span id="statusText">Ready</span>
+      </div>
+
+      <div class="user-chip" id="authChip" data-tooltip="Sync status with Cloudflare D1">
         <span class="user-dot" id="authDot"></span>
         <span id="authLabel">Guest</span>
       </div>
-      <button class="btn-secondary" id="loginBtn">✉️ Login</button>
-      <button class="btn-secondary" id="screenshotBtn">📸 Screenshot</button>
-      <button class="btn-primary" id="saveBtn">☁️ Save</button>
+
+      <button class="btn btn-outline btn-sm btn-icon" id="themeToggleBtn" data-tooltip="Toggle Light / Dark mode" aria-label="Toggle theme">
+        <svg id="themeIconSun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg id="themeIconMoon" style="display:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+
+      <button class="btn btn-outline btn-sm" id="screenshotBtn" data-tooltip="Export timetable as high-resolution PNG">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Screenshot</span>
+      </button>
+
+      <button class="btn btn-default btn-sm" id="saveBtn" data-tooltip="Save routine to Cloudflare D1">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span>Save</span>
+      </button>
+
+      <button class="btn btn-outline btn-sm" id="loginBtn" data-tooltip="Sign in with email for cloud persistence">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>Sign In</span>
+      </button>
     </div>
   </header>
 
-  <!-- 4 Clean Metric Cards -->
-  <section class="metrics-bar">
-    <div class="stat-card c-gate">
-      <div class="stat-label">GATE Target</div>
-      <div class="stat-value">109 <span style="font-size:13px; font-weight:500; color:var(--text-muted);">days</span></div>
-      <div class="stat-sub">Core CS & PYQs deep work</div>
-    </div>
-    <div class="stat-card c-exam">
-      <div class="stat-label">College Exam</div>
-      <div class="stat-value">30 <span style="font-size:13px; font-weight:500; color:var(--text-muted);">days</span></div>
-      <div class="stat-sub">Syllabus revision & assignments</div>
-    </div>
-    <div class="stat-card c-focus">
-      <div class="stat-label">Planned Focus</div>
-      <div class="stat-value" id="focusMetric">—</div>
-      <div class="stat-sub">GATE + Exam + Tech skills</div>
-    </div>
-    <div class="stat-card c-rest">
-      <div class="stat-label">Protected Rest & Health</div>
-      <div class="stat-value" id="lifeMetric">—</div>
-      <div class="stat-sub">Running, food & zero-guilt unwind</div>
-    </div>
-  </section>
+  <!-- Workspace Grid (Calendar + Controls) -->
+  <main class="main-grid">
 
-  <!-- Main Workspace -->
-  <main class="main-view">
-
-    <!-- Hero: Calendar Canvas -->
-    <section class="canvas-panel">
-      <div class="canvas-header">
-        <div class="canvas-title">
-          <span>Weekly Schedule</span>
-          <span style="font-size:11.5px; font-weight:500; color:var(--text-muted);" id="eventCount">0 blocks</span>
+    <!-- Calendar View -->
+    <section class="canvas-card">
+      <div class="canvas-toolbar">
+        <div class="legend-row">
+          <span class="legend-badge" data-tooltip="GATE Preparation: Core CS, OS, DAA & PYQs"><span class="legend-square" style="background:var(--cat-gate-border)"></span>GATE</span>
+          <span class="legend-badge" data-tooltip="College Exams: Subject revision & assignments"><span class="legend-square" style="background:var(--cat-exam-border)"></span>Exam</span>
+          <span class="legend-badge" data-tooltip="Tech Skills: System Design, LeetCode, AWS"><span class="legend-square" style="background:var(--cat-build-border)"></span>Tech</span>
+          <span class="legend-badge" data-tooltip="Running & Cardio: Physical recharge slot"><span class="legend-square" style="background:var(--cat-routine-border)"></span>Run</span>
+          <span class="legend-badge" data-tooltip="Protected unwind & sleep recovery"><span class="legend-square" style="background:var(--cat-life-border)"></span>Rest</span>
+          <span class="legend-badge" data-tooltip="1h cooldown & meal within 4–6 PM window"><span class="legend-square" style="background:var(--cat-meal-border)"></span>Food</span>
+          <span class="legend-badge" data-tooltip="Fixed college classes & daily commutes"><span class="legend-square" style="background:var(--cat-fixed-border)"></span>College</span>
         </div>
-        <div class="legend-strip">
-          <span class="legend-item"><span class="legend-pill" style="background:var(--gate-border)"></span>GATE</span>
-          <span class="legend-item"><span class="legend-pill" style="background:var(--exam-border)"></span>Exam</span>
-          <span class="legend-item"><span class="legend-pill" style="background:var(--build-border)"></span>Tech Skills</span>
-          <span class="legend-item"><span class="legend-pill" style="background:var(--routine-border)"></span>Running</span>
-          <span class="legend-item"><span class="legend-pill" style="background:var(--life-border)"></span>Rest</span>
-          <span class="legend-item"><span class="legend-pill" style="background:var(--meal-border)"></span>Food</span>
-          <span class="legend-item"><span class="legend-pill" style="background:var(--fixed-border)"></span>College</span>
-          <span class="legend-item">🔒 Lock toggle</span>
+
+        <div class="toolbar-right">
+          <span class="badge-counter" id="eventCount">0 blocks</span>
+          <button class="btn btn-ghost btn-sm" id="suggestBtn" data-tooltip="Trim one optional low-priority block to reduce overload">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+            <span>Trim</span>
+          </button>
         </div>
       </div>
 
-      <!-- Calendar Capture Container -->
-      <div class="calendar-outer" id="calendarCapture">
+      <!-- Calendar Container -->
+      <div class="calendar-viewport" id="calendarCapture">
         <div class="calendar-grid" id="calendar"></div>
-      </div>
-
-      <!-- Live Overlap & Status Bar -->
-      <div class="status-footer">
-        <span class="status-msg" id="statusText">💡 Drag blocks to adjust. Click 🔒/🔓 to freeze or unfreeze.</span>
-        <button class="btn-secondary" style="font-size:12px; padding:6px 11px;" id="suggestBtn">Trim Overload</button>
       </div>
     </section>
 
-    <!-- Sidebar: Essential Controls Only -->
+    <!-- Sidebar Cards (Flat, structured, no heading cascades) -->
     <aside class="sidebar">
 
       <!-- Block Editor Card -->
       <div class="panel-card">
-        <div class="panel-head">
-          <div class="panel-title">Block Editor</div>
-          <span class="brand-badge" id="editorModeBadge">New</span>
+        <div class="card-meta-bar">
+          <span class="badge-tag" id="editorModeBadge">New Block</span>
+          <span style="font-size:11px; color:hsl(var(--muted-foreground));">Click block to edit</span>
         </div>
 
         <div class="field">
           <label for="taskTitle">Activity Name</label>
-          <input class="input" id="taskTitle" placeholder="e.g. GATE: Algorithms" />
+          <input class="input" id="taskTitle" placeholder="e.g. GATE: Operating Systems" />
         </div>
 
         <div class="grid-2">
@@ -765,53 +995,52 @@ button {
           <input class="input" id="taskNote" placeholder="e.g. PYQs or 1 problem" />
         </div>
 
-        <div class="field" style="margin-top:2px;">
-          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-weight:600;color:var(--text);">
-            <input type="checkbox" id="taskLocked" style="width:auto;margin:0" />
-            🔒 Lock block (prevent drag/move)
+        <div class="field">
+          <label class="checkbox-row" data-tooltip="Lock prevents accidental drag or auto-adjustment">
+            <input type="checkbox" id="taskLocked" />
+            <span>Lock block position</span>
           </label>
         </div>
 
         <input type="hidden" id="editingId" />
 
-        <div class="grid-2" style="margin-top:12px;">
-          <button class="btn-primary" id="addBtn">Save Block</button>
-          <button class="btn-secondary" id="cancelEditBtn">Clear</button>
+        <div class="grid-2" style="margin-top:10px;">
+          <button class="btn btn-default" id="addBtn">Save Block</button>
+          <button class="btn btn-outline" id="cancelEditBtn">Clear</button>
         </div>
-        <button class="btn-danger" id="deleteBtn" style="width:100%;margin-top:8px;display:none;justify-content:center;">Delete Block</button>
+        <button class="btn btn-destructive" id="deleteBtn" style="width:100%;margin-top:8px;display:none;">Delete Block</button>
       </div>
 
-      <!-- Workload Balance Progress -->
+      <!-- Workload Balance Card -->
       <div class="panel-card">
-        <div class="panel-head">
-          <div class="panel-title">Weekly Balance</div>
+        <div class="card-meta-bar">
+          <span class="badge-tag">Weekly Split</span>
+          <span style="font-size:11px; color:hsl(var(--muted-foreground));" id="workloadCaption">—</span>
         </div>
         <div id="workloadList"></div>
         <div class="workload-bar">
           <div class="workload-fill" id="workloadBar"></div>
         </div>
-        <div style="font-size:11.5px; color:var(--text-muted); margin-top:6px;" id="workloadCaption">
-          Sustainable split with protected recovery.
-        </div>
       </div>
 
-      <!-- Attendance Shield -->
+      <!-- Attendance Guard Card (Flat semantic items) -->
       <div class="panel-card">
-        <div class="panel-head">
-          <div class="panel-title">Attendance Guard</div>
+        <div class="card-meta-bar">
+          <span class="badge-tag">Attendance Guard</span>
+          <span style="font-size:11px; color:hsl(var(--muted-foreground));">Policy</span>
         </div>
-        <div class="shield-badge mandatory">
-          <span>🛡️</span>
+        <div class="shield-badge mandatory" data-tooltip="Zero-absence tolerance enforced for ML theory and lab sessions">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <div>
             <strong>ML Theory & Labs: Mandatory</strong>
-            <div style="font-size:11px; opacity:0.85; margin-top:2px;">Never drop. Strict attendance criteria.</div>
+            <div style="font-size:10.5px; opacity:0.85;">Never drop. Strict attendance criteria.</div>
           </div>
         </div>
-        <div class="shield-badge droppable">
-          <span>⚡</span>
+        <div class="shield-badge droppable" data-tooltip="Cloud Computing, DAA and MLOps theory can be converted to study blocks if attendance buffer allows">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           <div>
             <strong>Other Theory: Flexible</strong>
-            <div style="font-size:11px; opacity:0.85; margin-top:2px;">Cloud, DAA & MLOps theory can be converted to study.</div>
+            <div style="font-size:10.5px; opacity:0.85;">Convertible to self-study when buffer permits.</div>
           </div>
         </div>
       </div>
@@ -819,25 +1048,28 @@ button {
     </aside>
   </main>
 
-  <!-- Clean Footer -->
+  <!-- Flat Minimalist Footer -->
   <footer class="app-footer">
-    Routine Lab Optimizer · Built with Cloudflare Pages · Protected ML & Labs · 1h 4–6 PM cooldown & meal
+    Routine Lab · Cloudflare Pages & D1 · Mandatory ML & Labs · 1h Cooldown (4–6 PM)
   </footer>
 </div>
 
-<!-- Email Login Modal -->
+<!-- Accessible Tooltip Portal Container (per tooltips.md) -->
+<div class="tooltip-portal" id="tooltipPortal" role="tooltip" aria-hidden="true"></div>
+
+<!-- Email Login Dialog (shadcn modal pattern) -->
 <div class="modal-overlay" id="loginModal">
-  <div class="modal-box">
-    <h3>Sign In with Email</h3>
-    <p>Sync your routine and screenshot exports to Cloudflare.</p>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-title" id="modalTitle">Sign In with Email</div>
+    <div class="modal-desc">Sync your routine blocks and exports to Cloudflare D1.</div>
     <form id="loginForm">
       <div class="field">
         <label for="userEmailInput">Email Address</label>
-        <input class="input" type="email" id="userEmailInput" placeholder="you@example.com" required />
+        <input class="input" type="email" id="userEmailInput" placeholder="you@college.edu" required />
       </div>
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
-        <button type="button" class="btn-secondary" id="closeLoginBtn">Cancel</button>
-        <button type="submit" class="btn-primary">Sign In</button>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+        <button type="button" class="btn btn-outline" id="closeLoginBtn">Cancel</button>
+        <button type="submit" class="btn btn-default">Sign In</button>
       </div>
     </form>
   </div>
@@ -866,7 +1098,7 @@ const baseEvents = [
   {day:0,start:18,dur:1,title:'College Exam: Revise 1 topic',type:'exam',fixed:false,note:'30-day exam prep'},
   {day:0,start:19,dur:1.5,title:'GATE: Core CS + PYQs',type:'gate',fixed:false,note:'109-day focus block'},
   {day:0,start:20.5,dur:1,title:'Dinner',type:'meal',fixed:true,note:'1h evening dinner'},
-  {day:0,start:21.5,dur:1,title:'Guilt-free decompress',type:'life',fixed:false,note:'Protected rest'},
+  {day:0,start:21.5,dur:1,title:'Decompress & Rest',type:'life',fixed:false,note:'Protected rest'},
 
   // Tuesday
   {day:1,start:8,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'2h morning prep'},
@@ -880,7 +1112,7 @@ const baseEvents = [
   {day:1,start:18,dur:1,title:'LeetCode Problem',type:'build',fixed:false,note:'Consistent daily coding'},
   {day:1,start:19,dur:1,title:'College Exam: Recall',type:'exam',fixed:false,note:'Syllabus mastery'},
   {day:1,start:20,dur:1,title:'Dinner',type:'meal',fixed:true,note:'1h evening dinner'},
-  {day:1,start:21,dur:1,title:'Free time / Gaming',type:'life',fixed:false,note:'Recharge'},
+  {day:1,start:21,dur:1,title:'Free time & Recharge',type:'life',fixed:false,note:'Recharge'},
 
   // Wednesday
   {day:2,start:5,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'Early start for 8 AM'},
@@ -893,10 +1125,10 @@ const baseEvents = [
   {day:2,start:14,dur:1,title:'DAA · Theory',type:'fixed',fixed:false,note:'Droppable'},
   {day:2,start:15,dur:1,title:'Commute home',type:'fixed',fixed:true,note:'1h travel'},
   {day:2,start:16,dur:1,title:'Cooldown & Food (4–6 PM)',type:'meal',fixed:false,note:'Food & recharge'},
-  {day:2,start:17.5,dur:0.75,title:'Running & Cardio 🏃',type:'routine',fixed:false,note:'Energy reset jog'},
+  {day:2,start:17.5,dur:0.75,title:'Running & Cardio',type:'routine',fixed:false,note:'Energy reset jog'},
   {day:2,start:18.5,dur:1.5,title:'GATE: Practice PYQs',type:'gate',fixed:false,note:'Targeted questions'},
   {day:2,start:20,dur:1,title:'Dinner',type:'meal',fixed:true,note:'Dinner'},
-  {day:2,start:21,dur:1,title:'Relax / Early rest',type:'life',fixed:false,note:'Rest'},
+  {day:2,start:21,dur:1,title:'Relax & Early sleep',type:'life',fixed:false,note:'Rest'},
 
   // Thursday
   {day:3,start:6,dur:2,title:'Get ready',type:'fixed',fixed:true,note:'2h prep'},
@@ -921,28 +1153,28 @@ const baseEvents = [
   {day:4,start:12.5,dur:1.5,title:'College Exam: Consolidation',type:'exam',fixed:false,note:'Weekly review'},
   {day:4,start:14,dur:1.5,title:'GATE: Timed practice',type:'gate',fixed:false,note:'Speed & accuracy'},
   {day:4,start:16,dur:1,title:'Cooldown & Food (4–6 PM)',type:'meal',fixed:false,note:'Food'},
-  {day:4,start:17.5,dur:0.75,title:'Running & Cardio 🏃',type:'routine',fixed:false,note:'Brisk run'},
+  {day:4,start:17.5,dur:0.75,title:'Running & Cardio',type:'routine',fixed:false,note:'Brisk run'},
   {day:4,start:18.5,dur:1.5,title:'Personal Project Coding',type:'build',fixed:false,note:'Ship one feature'},
   {day:4,start:20,dur:1,title:'Dinner',type:'meal',fixed:true,note:'Dinner'},
-  {day:4,start:21,dur:1.5,title:'Friday Night Leisure',type:'life',fixed:false,note:'Guilt-free time'},
+  {day:4,start:21,dur:1.5,title:'Friday Night Leisure',type:'life',fixed:false,note:'Recharge'},
 
   // Saturday
   {day:5,start:8,dur:1,title:'Slow Morning',type:'life',fixed:false,note:'Sleep recovery'},
-  {day:5,start:9,dur:1,title:'Morning Run 🏃',type:'routine',fixed:false,note:'Outdoor cardio'},
+  {day:5,start:9,dur:1,title:'Morning Run',type:'routine',fixed:false,note:'Outdoor cardio'},
   {day:5,start:10,dur:1,title:'Breakfast & Reset',type:'meal',fixed:true,note:'Breakfast'},
   {day:5,start:11,dur:2,title:'GATE: Deep Concept Work',type:'gate',fixed:false,note:'Hardest topic of the week'},
   {day:5,start:13,dur:1,title:'Lunch',type:'meal',fixed:true,note:'1h lunch'},
   {day:5,start:14,dur:1.5,title:'College Exam: Past Papers',type:'exam',fixed:false,note:'Questions & papers'},
   {day:5,start:16,dur:1,title:'Cooldown & Food (4–6 PM)',type:'meal',fixed:false,note:'Snack'},
-  {day:5,start:17.5,dur:2,title:'AWS Tutorial: Full Shot & Build',type:'build',fixed:false,note:'Hands-on cloud architecture'},
+  {day:5,start:17.5,dur:2,title:'AWS Tutorial: Hands-on',type:'build',fixed:false,note:'Cloud architecture practice'},
   {day:5,start:20,dur:1,title:'Dinner',type:'meal',fixed:true,note:'Dinner'},
-  {day:5,start:21,dur:2,title:'Gaming / Friends / Leisure',type:'life',fixed:false,note:'Full recharge'},
+  {day:5,start:21,dur:2,title:'Leisure / Friends',type:'life',fixed:false,note:'Full recharge'},
 
   // Sunday
   {day:6,start:8,dur:1,title:'Slow Morning',type:'life',fixed:false,note:'Rest'},
-  {day:6,start:9,dur:1,title:'Recovery Walk / Run 🏃',type:'routine',fixed:false,note:'Cardio'},
+  {day:6,start:9,dur:1,title:'Recovery Walk / Run',type:'routine',fixed:false,note:'Cardio'},
   {day:6,start:10.5,dur:1.5,title:'GATE: Weekly Revision & Error Log',type:'gate',fixed:false,note:'Formulas & PYQs'},
-  {day:6,start:12.5,dur:1,title:'Lunch',type:'meal',fixed:true,note:'Lunch'},
+  {day:6,start:12.5,dur:1.5,title:'Lunch',type:'meal',fixed:true,note:'Lunch'},
   {day:6,start:14,dur:1.5,title:'System Design Deep Dive',type:'build',fixed:false,note:'Architecture study'},
   {day:6,start:16,dur:1,title:'Cooldown & Food (4–6 PM)',type:'meal',fixed:false,note:'Food'},
   {day:6,start:17.5,dur:1.5,title:'College Assignments & Prep',type:'exam',fixed:false,note:'Prepare for week ahead'},
@@ -957,7 +1189,7 @@ function timeText(t){
   return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
 }
 function categoryName(t){
-  return ({gate:'GATE', exam:'Exam', build:'Tech Skills', routine:'Running', life:'Rest', meal:'Meal', fixed:'College / Travel'})[t] || t;
+  return ({gate:'GATE', exam:'Exam', build:'Tech', routine:'Running', life:'Rest', meal:'Food', fixed:'College'})[t] || t;
 }
 
 function render(){
@@ -1009,7 +1241,7 @@ function render(){
       render();
       updateMetrics();
       scheduleAutoSave();
-      $('statusText').textContent = `Moved "${ev.title}" to ${day} at ${timeText(start)}.`;
+      $('statusText').textContent = `Moved to ${day} at ${timeText(start)}.`;
     });
 
     events.filter(e => e.day === di).forEach(ev => {
@@ -1017,14 +1249,18 @@ function render(){
       card.className = 'event-card ' + ev.type + (ev.fixed ? ' fixed' : ' draggable');
       card.style.top = ((ev.start - MIN_H) * HOUR_PX + 2) + 'px';
       card.style.height = Math.max(ev.dur * HOUR_PX - 4, 18) + 'px';
-      card.title = `${timeText(ev.start)}–${timeText(ev.start + ev.dur)} · ${ev.note || categoryName(ev.type)} ${ev.fixed ? '(Locked)' : ''}`;
+      card.setAttribute('data-tooltip', `${timeText(ev.start)}–${timeText(ev.start + ev.dur)} · ${ev.title} ${ev.note ? '(' + ev.note + ')' : ''} ${ev.fixed ? '· [Locked]' : ''}`);
+
+      const lockIcon = ev.fixed
+        ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
+        : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
 
       card.innerHTML = `
-        <span class="lock-pill" title="${ev.fixed ? 'Locked (Click to unlock)' : 'Unlocked (Click to lock)'}">
-          ${ev.fixed ? '🔒' : '🔓'}
-        </span>
+        <button class="lock-pill" data-tooltip="${ev.fixed ? 'Locked (click to unfreeze)' : 'Unlocked (click to freeze)'}">
+          ${lockIcon}
+        </button>
         <strong>${escapeHTML(ev.title)}</strong>
-        <small>${timeText(ev.start)}–${timeText(ev.start + ev.dur)}${ev.note ? ' · ' + escapeHTML(ev.note) : ''}</small>
+        <small>${timeText(ev.start)}–${timeText(ev.start + ev.dur)}</small>
       `;
 
       // Interactive lock toggle
@@ -1036,7 +1272,7 @@ function render(){
           render();
           updateMetrics();
           scheduleAutoSave();
-          $('statusText').textContent = `"${ev.title}" is now ${ev.fixed ? 'locked 🔒' : 'unlocked 🔓 (draggable)'}.`;
+          $('statusText').textContent = `"${ev.title}" ${ev.fixed ? 'locked' : 'unlocked'}.`;
         });
       }
 
@@ -1087,7 +1323,7 @@ function clearEditor(){
   $('taskTitle').value = '';
   $('taskNote').value = '';
   $('taskLocked').checked = false;
-  $('editorModeBadge').textContent = 'New';
+  $('editorModeBadge').textContent = 'New Block';
   $('addBtn').textContent = 'Save Block';
   $('deleteBtn').style.display = 'none';
   selectedId = null;
@@ -1140,17 +1376,17 @@ function renderWorkload(){
   let totalFocus = mins.gate + mins.exam + mins.build;
 
   let data = [
-    ['GATE (109d)', mins.gate, 'var(--gate-border)'],
-    ['Exam (30d)', mins.exam, 'var(--exam-border)'],
-    ['Tech Skills', mins.build, 'var(--build-border)'],
-    ['Running', mins.routine, 'var(--routine-border)'],
-    ['Rest & Leisure', mins.life, 'var(--life-border)']
+    ['GATE', mins.gate, 'var(--cat-gate-border)'],
+    ['College Exam', mins.exam, 'var(--cat-exam-border)'],
+    ['Tech Skills', mins.build, 'var(--cat-build-border)'],
+    ['Running', mins.routine, 'var(--cat-routine-border)'],
+    ['Recovery & Rest', mins.life, 'var(--cat-life-border)']
   ];
 
   $('workloadList').innerHTML = data.map(([n, v, c]) => `
     <div class="workload-item">
       <div class="workload-left">
-        <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${c};flex-shrink:0"></span>
+        <span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${c};flex-shrink:0;"></span>
         <span>${n}</span>
       </div>
       <strong>${formatHours(v)}</strong>
@@ -1159,7 +1395,7 @@ function renderWorkload(){
 
   let all = totalFocus + mins.routine + mins.life;
   $('workloadBar').style.width = (all ? Math.min(100, (mins.life + mins.routine) / all * 100) : 0) + '%';
-  $('workloadCaption').textContent = `Weekly focus: ${formatHours(totalFocus)} · Protected rest: ${formatHours(mins.life + mins.routine)}`;
+  $('workloadCaption').textContent = `${formatHours(totalFocus)} focus · ${formatHours(mins.life + mins.routine)} rest`;
 }
 
 function formatHours(n){ return Number(n.toFixed(1)) + 'h'; }
@@ -1188,7 +1424,7 @@ function saveLocal(show=true){
     localStorage.setItem('routineLabEvents', JSON.stringify(events));
     if(show) $('statusText').textContent = 'Saved locally.';
   }catch(e){
-    $('statusText').textContent = 'Storage notice: full.';
+    $('statusText').textContent = 'Storage full.';
   }
 }
 
@@ -1206,14 +1442,14 @@ async function syncToCloudflare(showNotice=true){
     });
     const d = await res.json();
     if(d.success){
-      $('statusText').textContent = showNotice ? '✅ Synced to Cloudflare!' : 'Synced to Cloudflare.';
+      $('statusText').textContent = showNotice ? 'Synced to Cloudflare' : 'Synced.';
     } else {
-      $('statusText').textContent = 'Sync failed — saved locally.';
+      $('statusText').textContent = 'Saved locally.';
       saveLocal(false);
     }
   }catch(err){
     saveLocal(false);
-    $('statusText').textContent = '💾 No connection — saved locally.';
+    $('statusText').textContent = 'Saved locally.';
   }
 }
 
@@ -1238,11 +1474,11 @@ $('suggestBtn').onclick = () => {
 // Screenshot export
 $('screenshotBtn').onclick = async () => {
   const target = $('calendarCapture') || $('calendar');
-  $('statusText').textContent = 'Generating screenshot...';
+  $('statusText').textContent = 'Capturing screenshot...';
   try {
     const canvas = await html2canvas(target, {
       scale: 2,
-      backgroundColor: '#ffffff',
+      backgroundColor: document.documentElement.classList.contains('dark') ? '#09090b' : '#ffffff',
       useCORS: true,
       allowTaint: true,
       logging: false
@@ -1250,7 +1486,7 @@ $('screenshotBtn').onclick = async () => {
     const imgData = canvas.toDataURL('image/png');
 
     const link = document.createElement('a');
-    link.download = `routine-schedule-${new Date().toISOString().slice(0,10)}.png`;
+    link.download = `routine-${new Date().toISOString().slice(0,10)}.png`;
     link.href = imgData;
     link.click();
 
@@ -1273,17 +1509,17 @@ function updateAuthBadge(){
   if(currentUserEmail){
     $('authLabel').textContent = currentUserEmail;
     $('authDot').style.background = '#10b981';
-    $('loginBtn').textContent = 'Sign Out';
+    $('loginBtn').innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> <span>Sign Out</span>`;
     $('loginBtn').onclick = signOut;
   } else {
     $('authLabel').textContent = 'Guest';
-    $('authDot').style.background = '#94a3b8';
-    $('loginBtn').textContent = '✉️ Login';
+    $('authDot').style.background = 'hsl(var(--muted-foreground))';
+    $('loginBtn').innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> <span>Sign In</span>`;
     $('loginBtn').onclick = openLogin;
   }
 }
 
-function openLogin(){ $('loginModal').classList.add('open'); }
+function openLogin(){ $('loginModal').classList.add('open'); $('userEmailInput').focus(); }
 function closeLogin(){ $('loginModal').classList.remove('open'); }
 $('loginModal').addEventListener('click', (e) => { if(e.target === $('loginModal')) closeLogin(); });
 $('closeLoginBtn').onclick = closeLogin;
@@ -1303,7 +1539,7 @@ $('loginForm').onsubmit = async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     });
-  } catch(_){} // always proceed — email-only no-password flow
+  } catch(_){}
 
   currentUserEmail = email;
   localStorage.setItem('routine_email', email);
@@ -1319,13 +1555,13 @@ $('loginForm').onsubmit = async (e) => {
       events = schedData.events;
       render();
       updateMetrics();
-      $('statusText').textContent = '☁️ Loaded from Cloudflare.';
+      $('statusText').textContent = 'Loaded from cloud.';
     } else {
-      $('statusText').textContent = '✅ Signed in — schedule ready.';
+      $('statusText').textContent = 'Signed in.';
       syncToCloudflare(false);
     }
   } catch(_){
-    $('statusText').textContent = '✅ Signed in (offline mode).';
+    $('statusText').textContent = 'Signed in (offline mode).';
   }
 };
 
@@ -1335,6 +1571,94 @@ function signOut(){
   updateAuthBadge();
   $('statusText').textContent = 'Signed out.';
 }
+
+// Theme Toggle (Light / Dark shadcn mode)
+const themeBtn = $('themeToggleBtn');
+function setTheme(isDark){
+  if(isDark){
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light');
+    $('themeIconSun').style.display = 'none';
+    $('themeIconMoon').style.display = 'block';
+    localStorage.setItem('routine_theme', 'dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+    $('themeIconSun').style.display = 'block';
+    $('themeIconMoon').style.display = 'none';
+    localStorage.setItem('routine_theme', 'light');
+  }
+}
+const savedTheme = localStorage.getItem('routine_theme');
+const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+themeBtn.onclick = () => {
+  const isDark = document.documentElement.classList.contains('dark');
+  setTheme(!isDark);
+};
+
+// Accessible Tooltip Engine (per tooltips.md)
+const tooltipEl = $('tooltipPortal');
+let activeTarget = null;
+
+function showTooltip(target, text){
+  if(!text) return;
+  activeTarget = target;
+  tooltipEl.textContent = text;
+  tooltipEl.classList.add('visible');
+  tooltipEl.setAttribute('aria-hidden', 'false');
+
+  const rect = target.getBoundingClientRect();
+  const tipRect = tooltipEl.getBoundingClientRect();
+
+  // Position below target by default, or above if near bottom edge
+  let top = rect.bottom + 6;
+  if(top + tipRect.height > window.innerHeight - 8){
+    top = rect.top - tipRect.height - 6;
+  }
+  let left = rect.left + (rect.width - tipRect.width) / 2;
+  left = Math.max(8, Math.min(window.innerWidth - tipRect.width - 8, left));
+
+  tooltipEl.style.top = top + 'px';
+  tooltipEl.style.left = left + 'px';
+}
+
+function hideTooltip(){
+  tooltipEl.classList.remove('visible');
+  tooltipEl.setAttribute('aria-hidden', 'true');
+  activeTarget = null;
+}
+
+document.addEventListener('mouseover', e => {
+  const target = e.target.closest('[data-tooltip]');
+  if(target){
+    showTooltip(target, target.getAttribute('data-tooltip'));
+  }
+});
+
+document.addEventListener('mouseout', e => {
+  const target = e.target.closest('[data-tooltip]');
+  if(target && target === activeTarget){
+    hideTooltip();
+  }
+});
+
+document.addEventListener('focusin', e => {
+  const target = e.target.closest('[data-tooltip]');
+  if(target){
+    showTooltip(target, target.getAttribute('data-tooltip'));
+  }
+});
+
+document.addEventListener('focusout', () => hideTooltip());
+
+window.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    hideTooltip();
+    closeLogin();
+  }
+});
 
 // Init
 updateAuthBadge();
