@@ -1078,7 +1078,7 @@ function editEvent(id){
   $('taskLocked').checked = !!e.fixed;
   $('editorModeBadge').textContent = 'Editing';
   $('addBtn').textContent = 'Update';
-  $('deleteBtn').style.display = 'block';
+  $('deleteBtn').style.display = 'flex';
   $('statusText').textContent = 'Editing: ' + e.title;
 }
 
@@ -1150,7 +1150,7 @@ function renderWorkload(){
   $('workloadList').innerHTML = data.map(([n, v, c]) => `
     <div class="workload-item">
       <div class="workload-left">
-        <span style="width:8px; height:8px; border-radius:2px; background:${c}"></span>
+        <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${c};flex-shrink:0"></span>
         <span>${n}</span>
       </div>
       <strong>${formatHours(v)}</strong>
@@ -1206,12 +1206,14 @@ async function syncToCloudflare(showNotice=true){
     });
     const d = await res.json();
     if(d.success){
-      if(showNotice) alert('Synced to Cloudflare!');
-      $('statusText').textContent = 'Synced to Cloudflare.';
+      $('statusText').textContent = showNotice ? '✅ Synced to Cloudflare!' : 'Synced to Cloudflare.';
+    } else {
+      $('statusText').textContent = 'Sync failed — saved locally.';
+      saveLocal(false);
     }
   }catch(err){
     saveLocal(false);
-    $('statusText').textContent = 'Saved locally.';
+    $('statusText').textContent = '💾 No connection — saved locally.';
   }
 }
 
@@ -1241,7 +1243,9 @@ $('screenshotBtn').onclick = async () => {
     const canvas = await html2canvas(target, {
       scale: 2,
       backgroundColor: '#ffffff',
-      useCORS: true
+      useCORS: true,
+      allowTaint: true,
+      logging: false
     });
     const imgData = canvas.toDataURL('image/png');
 
@@ -1281,6 +1285,7 @@ function updateAuthBadge(){
 
 function openLogin(){ $('loginModal').classList.add('open'); }
 function closeLogin(){ $('loginModal').classList.remove('open'); }
+$('loginModal').addEventListener('click', (e) => { if(e.target === $('loginModal')) closeLogin(); });
 $('closeLoginBtn').onclick = closeLogin;
 
 $('loginForm').onsubmit = async (e) => {
@@ -1288,32 +1293,39 @@ $('loginForm').onsubmit = async (e) => {
   const email = $('userEmailInput').value.trim();
   if(!email) return;
 
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Signing in...';
+
   try {
     await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     });
-    currentUserEmail = email;
-    localStorage.setItem('routine_email', email);
-    updateAuthBadge();
-    closeLogin();
+  } catch(_){} // always proceed — email-only no-password flow
 
+  currentUserEmail = email;
+  localStorage.setItem('routine_email', email);
+  updateAuthBadge();
+  closeLogin();
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Sign In';
+
+  try {
     const schedRes = await fetch(`/api/schedule?email=${encodeURIComponent(email)}`);
     const schedData = await schedRes.json();
     if(schedData.found && Array.isArray(schedData.events) && schedData.events.length){
       events = schedData.events;
       render();
       updateMetrics();
-      $('statusText').textContent = 'Loaded from Cloudflare.';
+      $('statusText').textContent = '☁️ Loaded from Cloudflare.';
     } else {
+      $('statusText').textContent = '✅ Signed in — schedule ready.';
       syncToCloudflare(false);
     }
-  } catch (err) {
-    currentUserEmail = email;
-    localStorage.setItem('routine_email', email);
-    updateAuthBadge();
-    closeLogin();
+  } catch(_){
+    $('statusText').textContent = '✅ Signed in (offline mode).';
   }
 };
 
